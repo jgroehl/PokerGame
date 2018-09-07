@@ -43,6 +43,7 @@ class Deck:
 
 class Game:
     def __init__(self, num_players):
+        self.num_players = num_players
         self.deck = Deck()
         self.cards = self.deck.random_sample_cards(5+(num_players*2))
         self.flop = self.cards[0:3]

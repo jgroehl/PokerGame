@@ -21,6 +21,28 @@ from pokerlib.domain import Card
 # HIGH_CARD = 0
 class TestBorderConditions(unittest.TestCase):
 
+    def testTwoStraightsWithSameValueRange(self):
+        cards = [
+            [Card(3, 3), Card(5, 3), Card(6, 3), Card(8, 2), Card(10, 1), Card(11, 2), Card(12, 0)],
+            [Card(5, 3), Card(6, 2), Card(8, 2), Card(10, 1), Card(11, 2), Card(12, 1), Card(12, 0)],
+            [Card(0, 1), Card(5, 3), Card(7, 0), Card(8, 2), Card(10, 1), Card(11, 2), Card(12, 0)],
+            [Card(5, 2), Card(5, 3), Card(8, 2), Card(9, 3), Card(10, 1), Card(11, 2), Card(12, 0)],
+            [Card(2, 3), Card(5, 3), Card(8, 3), Card(8, 2), Card(10, 1), Card(11, 2), Card(12, 0)],
+            [Card(4, 2), Card(5, 3), Card(8, 2), Card(9, 2), Card(10, 1), Card(11, 2), Card(12, 0)]]
+
+        cards_eval = [evaluate_cards(card) for card in cards]
+        assert (cards_eval[0][0] == 0)
+        assert (cards_eval[1][0] == 1)
+        assert (cards_eval[2][0] == 0)
+        assert (cards_eval[3][0] == 4)
+        assert (cards_eval[4][0] == 1)
+        assert (cards_eval[5][0] == 4)
+        winning_indexes = decide_on_victory(cards_eval)
+        assert (winning_indexes[0] == 3)
+        assert (winning_indexes[1] == 5)
+        assert (len(winning_indexes) == 2)
+
+
     def testNoWinner(self):
         cards = [
             [Card(3, 1), Card(4, 3), Card(6, 0), Card(7, 2), Card(10, 1), Card(12, 2), Card(12, 3)],

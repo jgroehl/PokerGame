@@ -35,8 +35,8 @@ def decide_on_victory(hand_evaluations):
             # All straights with the same highest card win
             values = np.asarray([[value.value for value in hand][::-1] for hand in hand_evals[:, 1]])
             new_indexes_in_question = np.where(values[:, 0]
-                                               == np.max(values[indexes_in_question][:, 0]))
-            return orig_indexes[new_indexes_in_question]
+                                               == np.max(values[:, 0]))
+            return orig_indexes[indexes_in_question[new_indexes_in_question]]
 
         elif evaluation_value == Evaluator.FULL_HOUSE:
             #The full house with the highest set or with the same set and highest pair wins
@@ -114,7 +114,6 @@ def decide_on_victory(hand_evaluations):
             else:
                 # The highest three kickers win
                 kickers = np.asarray([[value.value for value in hand][::-1] for hand in hand_evals[value_indexes[0], 2]])
-                print("Kickers:", kickers)
                 return_indexes_in_question = np.copy(value_indexes[0])
                 for i in range(3):
                     kicker_indexes_in_question = np.where(kickers[:, i]
