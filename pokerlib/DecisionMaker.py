@@ -44,14 +44,18 @@ def decide_on_victory(hand_evaluations):
             uniques_and_counts = np.asarray([np.unique(value, return_counts=True) for value in values])
             sets = [uniques_and_counts[i, 1] == 3 for i in range(len(uniques_and_counts))]
             sets = np.asarray([uniques_and_counts[i, 0][np.where(sets[i])] for i in range(len(uniques_and_counts))])
-            top_sets = np.asarray(np.where(sets[:, 0] == np.max(sets[:, 0])))
+            max_sets = [np.max(sets[i]) for i in range(len(sets))]
+            top_sets = np.asarray(np.where(max_sets == np.max(max_sets)))
             if np.prod(np.shape(top_sets)) == 1:
                 return orig_indexes[indexes_in_question[top_sets[0]]]
             else:
-                pairs = [uniques_and_counts[i, 1] == 2 for i in range(len(uniques_and_counts))]
+                pairs = [uniques_and_counts[i, 1] == 2 | ((uniques_and_counts[i, 1] == 3) &
+                                                          (uniques_and_counts[i, 0] != max_sets[i]))
+                         for i in range(len(uniques_and_counts))]
                 pairs = np.asarray(
                     [uniques_and_counts[i, 0][np.where(pairs[i])] for i in top_sets[0]])
-                top_pairs = np.asarray(np.where(pairs[:, 0] == np.max(pairs[:, 0])))
+                max_pairs = [np.max(pairs[i]) for i in range(len(pairs))]
+                top_pairs = np.asarray(np.where(max_pairs == np.max(max_pairs)))
                 return orig_indexes[indexes_in_question[top_sets[0][top_pairs[0]]]]
 
         elif evaluation_value == Evaluator.FOUR_OF_A_KIND:

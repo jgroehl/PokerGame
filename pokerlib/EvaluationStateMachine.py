@@ -15,6 +15,9 @@ class StateDevice(object):
         if card_index not in self.used_card_indices:
             self.used_card_indices.append(card_index)
 
+    def reset_card_indexes(self):
+        self.used_card_indices = []
+
 
 class FlushStateDevice(StateDevice):
 
@@ -27,7 +30,7 @@ class StraightStateDevice(StateDevice):
 
     def __init__(self):
         super(StraightStateDevice, self).__init__()
-        self.state = InitStraightState()
+        self.state = InitStraightState(self)
 
 
 class CardValueStateDevice(StateDevice):
@@ -101,13 +104,16 @@ class FlushState(State):
 
 
 class InitStraightState(State):
+    def __init__(self, device):
+        device.reset_card_indexes()
+
     def on_event(self, event, index, device):
         if event == 1:
             device.add_card_index(index)
             device.add_card_index(index+1)
             return TwoStraightState()
         else:
-            return InitStraightState()
+            return InitStraightState(device)
 
 
 class TwoStraightState(State):
@@ -118,7 +124,7 @@ class TwoStraightState(State):
         elif event == 0:
             return TwoStraightState()
         else:
-            return InitStraightState()
+            return InitStraightState(device)
 
 
 class ThreeStraightState(State):
@@ -129,7 +135,7 @@ class ThreeStraightState(State):
         elif event == 0:
             return ThreeStraightState()
         else:
-            return InitStraightState()
+            return InitStraightState(device)
 
 
 class FourStraightState(State):
@@ -140,14 +146,24 @@ class FourStraightState(State):
         elif event == 0:
             return FourStraightState()
         else:
-            return InitStraightState()
+            return InitStraightState(device)
 
 
 class StraightState(State):
     def on_event(self, event, index, device):
         if event == 1:
             device.add_card_index(index + 1)
-        return StraightState()
+            return StraightState()
+        else:
+            return FinishStraightState()
+
+    def evaluate(self):
+        return Evalutaor.STRAIGHT
+
+
+class FinishStraightState(State):
+    def on_event(self, event, index, device):
+        return FinishStraightState()
 
     def evaluate(self):
         return Evalutaor.STRAIGHT

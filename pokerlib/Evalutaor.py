@@ -61,7 +61,7 @@ def evaluate_cards(cards):
     high_cards = list(np.copy(cards))
     if is_flush and is_straight and len(sf_indexes) > 4:
         if (cards[sf_indexes][-1].value == 12 and
-           cards[sf_indexes][-2].value == 11): # Add the king in here for the ace to five straight flush check.
+           cards[sf_indexes][-2].value == 11):  # Add the king in here for the ace to five straight flush check.
             return [ROYAL_FLUSH, cards[sf_indexes]]
         if cards[sf_indexes][-1].value == 12:
             sf_indexes = list(sf_indexes)

@@ -22,7 +22,7 @@ class Card:
         return self.__repr__()
 
     def __repr__(self):
-        return self.get_card_string().split(".")[0];
+        return "Card(" + str(self.value) + ", " + str(self.suit) + ")"
 
     def get_card_string(self):
         return VALUES[self.value] + "_of_" + SUITS[self.suit] + ".png"
