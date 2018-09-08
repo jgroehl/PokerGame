@@ -27,10 +27,20 @@ HAND_HIGH_CARD = [Card(1, 0), Card(2, 1), Card(10, 1), Card(12, 3),
 
 class TestEvaluator(unittest.TestCase):
 
+    def test_yet_another_hand_that_wants_to_be_a_royal_flush_but_is_a_flush(self):
+        hand = [Card(0, 2), Card(4, 3), Card(8, 3), Card(9, 2), Card(10, 2), Card(11, 2), Card(12, 2)]
+        val = evaluate_cards(hand)
+        self.assertEqual(val[0], Evalutaor.FLUSH)
+
+    def test_another_hand_that_wants_to_be_a_royal_flush_but_is_a_flush(self):
+        hand = [Card(0, 2), Card(7, 1), Card(8, 3), Card(9, 1), Card(10, 1), Card(11, 1), Card(12, 1)]
+        val = evaluate_cards(hand)
+        self.assertEqual(val[0], Evalutaor.FLUSH)
+
+
     def test_hand_that_wants_to_be_a_royal_flush_but_is_a_flush(self):
         hand = [Card(0, 2), Card(1, 2), Card(8, 2), Card(9, 3), Card(10, 1), Card(11, 2), Card(12, 2)]
         val = evaluate_cards(hand)
-        print(val)
         self.assertEqual(val[0], Evalutaor.FLUSH)
 
     def test_royal_flush(self):

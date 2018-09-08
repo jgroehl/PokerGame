@@ -97,7 +97,17 @@ class FlushState(State):
         if event == 0:
             for i in range(index-3, index+2):
                 device.add_card_index(i)
-        return FlushState()
+            return FlushState()
+        else:
+            return FinalFlushState()
+
+    def evaluate(self):
+        return Evalutaor.FLUSH
+
+
+class FinalFlushState(State):
+    def on_event(self, event, index, device):
+        return FinalFlushState()
 
     def evaluate(self):
         return Evalutaor.FLUSH

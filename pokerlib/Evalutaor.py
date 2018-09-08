@@ -43,6 +43,7 @@ def evaluate_cards(cards):
     is_straight = straight_state_machine.state.evaluate()
     straight_indexes = straight_state_machine.used_card_indices
 
+    is_ace_high_straight = False
     if not is_straight and \
             (12 in cards_values and
              0 in cards_values and
@@ -50,19 +51,23 @@ def evaluate_cards(cards):
              2 in cards_values and
              3 in cards_values):
         is_straight = True
+        is_ace_high_straight = True
         ace_straight_values = [12, 0, 1, 2, 3]
         straight_indexes = np.asarray([np.where(cards_values == ace_straight_values[i])[0][0]
                             for i in range(len(ace_straight_values))])
 
     value_result = value_state_machine.state.evaluate()
     value_indexes = value_state_machine.used_card_indices
-
     sf_indexes = np.intersect1d(flush_card_indexes, straight_indexes)
+    index_diffs = np.abs([sf_indexes[i]-sf_indexes[i+1] for i in range(len(sf_indexes)-1)])
     high_cards = list(np.copy(cards))
-    if is_flush and is_straight and len(sf_indexes) > 4:
+    if is_flush \
+            and is_straight \
+            and (np.sum(index_diffs) == len(sf_indexes)-1 or is_ace_high_straight) \
+            and len(sf_indexes) > 4:
         if (cards[sf_indexes][-1].value == 12 and
            cards[sf_indexes][-2].value == 11):  # Add the king in here for the ace to five straight flush check.
-            return [ROYAL_FLUSH, cards[sf_indexes]]
+            return [ROYAL_FLUSH, cards[sf_indexes], []]
         if cards[sf_indexes][-1].value == 12:
             sf_indexes = list(sf_indexes)
             sf_indexes.insert(0, sf_indexes.pop(-1))

@@ -21,7 +21,61 @@ from pokerlib.domain import Card
 # HIGH_CARD = 0
 class TestBorderConditions(unittest.TestCase):
 
-    def testTooManyIndexesError(self):
+    def testManyPairsException(self):
+        cards = [[Card(5, 3), Card(5, 0), Card(8, 2), Card(8, 1), Card(9, 1), Card(10, 3), Card(10, 1)],
+                 [Card(3, 0), Card(5, 1), Card(5, 0), Card(8, 2), Card(8, 1), Card(9, 1), Card(10, 1)],
+                 [Card(5, 0), Card(8, 2), Card(8, 1), Card(9, 1), Card(10, 1), Card(11, 1), Card(12, 1)],
+                 [Card(0, 2), Card(4, 1), Card(5, 0), Card(8, 2), Card(8, 1), Card(9, 1), Card(10, 1)],
+                 [Card(1, 0), Card(5, 0), Card(8, 2), Card(8, 1), Card(9, 2), Card(9, 1), Card(10, 1)],
+                 [Card(3, 1), Card(5, 0), Card(8, 2), Card(8, 1), Card(9, 1), Card(10, 0), Card(10, 1)]]
+        cards_eval = [evaluate_cards(card) for card in cards]
+        self.assertEqual(cards_eval[0][0], 2, cards_eval[0])
+        self.assertEqual(cards_eval[1][0], 2, cards_eval[1])
+        self.assertEqual(cards_eval[2][0], 9, cards_eval[2])
+        self.assertEqual(cards_eval[3][0], 1, cards_eval[3])
+        self.assertEqual(cards_eval[4][0], 2, cards_eval[4])
+        self.assertEqual(cards_eval[5][0], 2, cards_eval[5])
+        winning_indexes = decide_on_victory(cards_eval)
+        assert (winning_indexes[0] == 2)
+        assert (len(winning_indexes) == 1)
+
+    def testNoFinalFlushStateException(self):
+        cards = [[Card(0, 2), Card(4, 3), Card(9, 1), Card(10, 2), Card(11, 2), Card(12, 1), Card(12, 2)],
+                 [Card(0, 0), Card(0, 2), Card(3, 1), Card(4, 3), Card(10, 2), Card(11, 2), Card(12, 2)],
+                 [Card(0, 2), Card(1, 0), Card(4, 3), Card(6, 3), Card(10, 2), Card(11, 2), Card(12, 2)],
+                 [Card(0, 2), Card(3, 3), Card(4, 3), Card(5, 3), Card(10, 2), Card(11, 2), Card(12, 2)],
+                 [Card(0, 2), Card(4, 3), Card(8, 3), Card(9, 2), Card(10, 2), Card(11, 2), Card(12, 2)],
+                 [Card(0, 2), Card(3, 0), Card(4, 3), Card(10, 2), Card(11, 2), Card(12, 0), Card(12, 2)]]
+        cards_eval = [evaluate_cards(card) for card in cards]
+        self.assertEqual(cards_eval[0][0], 1, cards_eval[0])
+        self.assertEqual(cards_eval[1][0], 1, cards_eval[1])
+        self.assertEqual(cards_eval[2][0], 0, cards_eval[2])
+        self.assertEqual(cards_eval[3][0], 0, cards_eval[3])
+        self.assertEqual(cards_eval[4][0], 5, cards_eval[4])
+        self.assertEqual(cards_eval[5][0], 1, cards_eval[5])
+        winning_indexes = decide_on_victory(cards_eval)
+        assert (winning_indexes[0] == 4)
+        assert (len(winning_indexes) == 1)
+
+    def testStraightIndexes(self):
+        cards = [[Card(2, 2), Card(6, 2), Card(7, 1), Card(8, 3), Card(9, 1), Card(10, 1), Card(12, 1)],
+                 [Card(1, 1), Card(2, 3), Card(7, 1), Card(8, 3), Card(9, 1), Card(10, 1), Card(12, 1)],
+                 [Card(0, 0), Card(6, 1), Card(7, 1), Card(8, 3), Card(9, 1), Card(10, 1), Card(12, 1)],
+                 [Card(0, 2), Card(7, 1), Card(8, 3), Card(9, 1), Card(10, 1), Card(11, 1), Card(12, 1)],
+                 [Card(2, 0), Card(7, 1), Card(8, 3), Card(9, 1), Card(10, 1), Card(11, 2), Card(12, 1)],
+                 [Card(1, 3), Card(4, 3), Card(7, 1), Card(8, 3), Card(9, 1),  Card(10, 1), Card(12, 1)]]
+        cards_eval = [evaluate_cards(card) for card in cards]
+        self.assertEqual(cards_eval[0][0], 4, cards_eval[0])
+        self.assertEqual(cards_eval[1][0], 5, cards_eval[1])
+        self.assertEqual(cards_eval[2][0], 5, cards_eval[2])
+        self.assertEqual(cards_eval[3][0], 5, cards_eval[3])
+        self.assertEqual(cards_eval[4][0], 4, cards_eval[4])
+        self.assertEqual(cards_eval[5][0], 0, cards_eval[5])
+        winning_indexes = decide_on_victory(cards_eval)
+        assert (winning_indexes[0] == 3)
+        assert (len(winning_indexes) == 1)
+
+    def testFlushEvaluation(self):
         cards = [
             [Card(1, 2), Card(3, 0), Card(7, 2), Card(8, 2), Card(9, 3), Card(10, 1), Card(11, 2)],
             [Card(1, 2), Card(4, 1), Card(6, 1), Card(8, 2), Card(9, 3), Card(10, 1), Card(11, 2)],
@@ -99,7 +153,6 @@ class TestBorderConditions(unittest.TestCase):
         assert (winning_indexes[0] == 3)
         assert (winning_indexes[1] == 5)
         assert (len(winning_indexes) == 2)
-
 
     def testNoWinner(self):
         cards = [
