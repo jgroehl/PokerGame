@@ -5,7 +5,7 @@ from pokerlib.visualize import debug_play
 import time
 
 
-NUM_PLAYERS = 2
+NUM_PLAYERS = 9
 NUM_HANDS = 10000
 start = time.time()
 for i in range(NUM_HANDS):
@@ -14,6 +14,8 @@ for i in range(NUM_HANDS):
     try:
         cards_eval = [evaluate_cards(card) for card in cards]
         winning_indexes = decide_on_victory(cards_eval)
+        if len(winning_indexes) == 0:
+            raise Exception("no winner")
     except Exception as e:
         print("cards: ", cards)
         print(e)

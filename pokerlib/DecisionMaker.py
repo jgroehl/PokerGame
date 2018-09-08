@@ -66,7 +66,7 @@ def decide_on_victory(hand_evaluations):
                 return orig_indexes[indexes_in_question[value_indexes[0]]]
             else:
                 # The highest kicker wins
-                kickers = np.asarray([[value.value for value in hand][::-1] for hand in hand_evals[:, 2]])
+                kickers = np.asarray([[value.value for value in hand][::-1] for hand in hand_evals[value_indexes[0], 2]])
                 kicker_indexes = np.where(kickers[:, 0] == np.max(kickers[:, 0]))
                 kicker_indexes = np.intersect1d(value_indexes[0], kicker_indexes[0])
                 return orig_indexes[indexes_in_question[kicker_indexes]]
@@ -79,7 +79,7 @@ def decide_on_victory(hand_evaluations):
                 return orig_indexes[indexes_in_question[value_indexes[0]]]
             else:
                 # The highest two kickers win
-                kickers = np.asarray([[value.value for value in hand][::-1] for hand in hand_evals[:, 2]])
+                kickers = np.asarray([[value.value for value in hand][::-1] for hand in hand_evals[value_indexes[0], 2]])
                 return_indexes_in_question = np.copy(value_indexes[0])
                 for i in range(2):
                     kicker_indexes_in_question = np.where(kickers[:, i]
@@ -98,13 +98,13 @@ def decide_on_victory(hand_evaluations):
                 return orig_indexes[indexes_in_question[value_indexes[0]]]
             else:
                 # The second highest pair wins
-                values = np.asarray([[value.value for value in hand][::-1] for hand in hand_evals[:, 1][value_indexes]])
+                values = np.asarray([[value.value for value in hand][::-1] for hand in hand_evals[value_indexes[0], 1]])
                 value_indexes_second = np.where(values[:, 2] == np.max(values[:, 2]))
                 if np.prod(np.shape(value_indexes_second)) == 1:
                     return orig_indexes[indexes_in_question[value_indexes[0][value_indexes_second]]]
                 else:
                     # The highest kicker wins
-                    kickers = np.asarray([[value.value for value in hand][::-1] for hand in hand_evals[:, 2]])
+                    kickers = np.asarray([[value.value for value in hand][::-1] for hand in hand_evals[value_indexes_second[0], 2]])
                     kicker_indexes = np.where(kickers[:, 0] == np.max(kickers[:, 0]))
                     kicker_indexes = np.intersect1d(value_indexes[0], kicker_indexes[0])
                     return orig_indexes[indexes_in_question[kicker_indexes]]

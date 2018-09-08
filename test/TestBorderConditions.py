@@ -21,6 +21,30 @@ from pokerlib.domain import Card
 # HIGH_CARD = 0
 class TestBorderConditions(unittest.TestCase):
 
+    def testNoWinnerInTwoPair9Handed(self):
+        cards = [[Card(0, 3), Card(4, 2), Card(6, 0), Card(9, 2), Card(9, 3), Card(10, 1), Card(10, 0)],
+                 [Card(0, 3), Card(4, 2), Card(7, 0), Card(8, 3), Card(9, 2), Card(9, 3), Card(10, 0)],
+                 [Card(0, 3), Card(4, 2), Card(7, 3), Card(9, 2), Card(9, 3), Card(10, 0), Card(12, 2)],
+                 [Card(0, 3), Card(4, 2), Card(8, 1), Card(9, 2), Card(9, 3), Card(10, 0), Card(11, 2)],
+                 [Card(0, 3), Card(4, 2), Card(8, 2), Card(9, 2), Card(9, 3), Card(10, 0), Card(12, 1)],
+                 [Card(0, 3), Card(3, 3), Card(4, 2), Card(9, 2), Card(9, 3), Card(10, 3), Card(10, 0)],
+                 [Card(0, 3), Card(1, 0), Card(4, 2), Card(9, 2), Card(9, 3), Card(10, 0), Card(12, 0)],
+                 [Card(0, 3), Card(4, 2), Card(8, 0), Card(9, 2), Card(9, 3), Card(10, 2), Card(10, 0)],
+                 [Card(0, 3), Card(3, 1), Card(3, 0), Card(4, 2), Card(9, 2), Card(9, 3), Card(10, 0)]]
+        cards_eval = [evaluate_cards(card) for card in cards]
+        self.assertEqual(cards_eval[0][0], 2, cards_eval[0])
+        self.assertEqual(cards_eval[1][0], 1, cards_eval[1])
+        self.assertEqual(cards_eval[2][0], 1, cards_eval[2])
+        self.assertEqual(cards_eval[3][0], 1, cards_eval[3])
+        self.assertEqual(cards_eval[4][0], 1, cards_eval[4])
+        self.assertEqual(cards_eval[5][0], 2, cards_eval[5])
+        self.assertEqual(cards_eval[6][0], 1, cards_eval[6])
+        self.assertEqual(cards_eval[7][0], 2, cards_eval[7])
+        self.assertEqual(cards_eval[8][0], 2, cards_eval[8])
+        winning_indexes = decide_on_victory(cards_eval)
+        assert (winning_indexes[0] == 7)
+        assert (len(winning_indexes) == 1)
+
     def testManyPairsException(self):
         cards = [[Card(5, 3), Card(5, 0), Card(8, 2), Card(8, 1), Card(9, 1), Card(10, 3), Card(10, 1)],
                  [Card(3, 0), Card(5, 1), Card(5, 0), Card(8, 2), Card(8, 1), Card(9, 1), Card(10, 1)],
