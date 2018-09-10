@@ -186,6 +186,7 @@ class ValueInitState(State):
                 device.add_card_index(i)
             return FirstPairState()
         else:
+            device.reset_card_indexes()
             return ValueInitState()
 
 

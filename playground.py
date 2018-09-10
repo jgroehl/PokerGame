@@ -6,7 +6,7 @@ import time
 
 
 NUM_PLAYERS = 9
-NUM_HANDS = 10000
+NUM_HANDS = 100000
 start = time.time()
 for i in range(NUM_HANDS):
     game = Game(num_players=NUM_PLAYERS)

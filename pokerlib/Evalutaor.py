@@ -75,7 +75,10 @@ def evaluate_cards(cards):
         return [STRAIGHT_FLUSH, cards[sf_indexes], []]
 
     if value_result == FOUR_OF_A_KIND:
-        return_cards = cards[value_indexes][-4:]
+        return_cards = cards[value_indexes]
+        if len(return_cards) > 4:
+            card_values = np.asarray([cards[index].value for index in value_indexes])
+            return_cards = return_cards[np.where(card_values == np.median(card_values))]
         for card in return_cards:
             high_cards.remove(card)
         return [FOUR_OF_A_KIND, return_cards, get_high_cards(high_cards, 1)]
