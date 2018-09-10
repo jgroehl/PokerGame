@@ -33,13 +33,13 @@ def decide_on_victory(hand_evaluations):
 
         elif evaluation_value == Evaluator.STRAIGHT or evaluation_value == Evaluator.STRAIGHT_FLUSH:
             # All straights with the same highest card win
-            values = np.asarray([[value.value for value in hand][::-1] for hand in hand_evals[:, 1]])
+            values = np.asarray([[value.value for value in hand][::-1][0:5] for hand in hand_evals[:, 1]])
             new_indexes_in_question = np.where(values[:, 0]
                                                == np.max(values[:, 0]))
             return orig_indexes[indexes_in_question[new_indexes_in_question]]
 
         elif evaluation_value == Evaluator.FULL_HOUSE:
-            #The full house with the highest set or with the same set and highest pair wins
+            # The full house with the highest set or with the same set and highest pair wins
             values = [[value.value for value in hand] for hand in hand_evals[:, 1]]
             uniques_and_counts = np.asarray([np.unique(value, return_counts=True) for value in values])
             sets = [uniques_and_counts[i, 1] == 3 for i in range(len(uniques_and_counts))]
@@ -79,16 +79,19 @@ def decide_on_victory(hand_evaluations):
                 return orig_indexes[indexes_in_question[value_indexes[0]]]
             else:
                 # The highest two kickers win
-                kickers = np.asarray([[value.value for value in hand][::-1] for hand in hand_evals[value_indexes[0], 2]])
-                return_indexes_in_question = np.copy(value_indexes[0])
+                kickers = np.asarray(
+                    [[value.value for value in hand][::-1] for hand in hand_evals[value_indexes[0], 2]])
+                kicker_indexes = np.asarray([i for i in range(len(kickers))])
+                return_indexes_in_question = np.asarray([i for i in range(len(kickers))])
                 for i in range(2):
-                    kicker_indexes_in_question = np.where(kickers[:, i]
-                                                       == np.max(kickers[:, i]))[0]
+                    kicker_indexes_in_question = np.where(kickers[return_indexes_in_question, i]
+                                                          == np.max(kickers[return_indexes_in_question, i]))[0]
                     return_indexes_in_question = np.intersect1d(return_indexes_in_question,
-                                                                kicker_indexes_in_question)
+                                                                kicker_indexes[return_indexes_in_question[
+                                                                    kicker_indexes_in_question]])
                     if np.prod(np.shape(return_indexes_in_question)) == 1:
-                        return orig_indexes[indexes_in_question[return_indexes_in_question]]
-                return orig_indexes[indexes_in_question[return_indexes_in_question]]
+                        return orig_indexes[indexes_in_question[value_indexes[0][return_indexes_in_question]]]
+                return orig_indexes[indexes_in_question[value_indexes[0][return_indexes_in_question]]]
 
         elif evaluation_value == Evaluator.TWO_PAIR:
             # The highest pair wins
