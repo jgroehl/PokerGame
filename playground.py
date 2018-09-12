@@ -5,8 +5,8 @@ from pokerlib.visualize import debug_play
 import time
 
 
-NUM_PLAYERS = 9
-NUM_HANDS = 100000
+NUM_PLAYERS = 2
+NUM_HANDS = 1
 start = time.time()
 for i in range(NUM_HANDS):
     game = Game(num_players=NUM_PLAYERS)
@@ -19,11 +19,10 @@ for i in range(NUM_HANDS):
     except Exception as e:
         print("cards: ", cards)
         print(e)
-    #log = "Cards: " + str(cards) + "\n"
-    #log += "Eval: " + str(cards_eval) + "\n"
-    #log += "Winners: " + str([cards[index] for index in winning_indexes])
-    #print(log)
-    #debug_play(game, winning_indexes, log)
+    log = "Cards: " + str(cards) + "\n"
+    log += "Eval: " + str(cards_eval) + "\n"
+    log += "Winners: " + str([cards[index] for index in winning_indexes])
+    debug_play(game, winning_indexes, log)
 end = time.time()
 print(((end - start) / NUM_HANDS)*1000, "ms / hand")
 
